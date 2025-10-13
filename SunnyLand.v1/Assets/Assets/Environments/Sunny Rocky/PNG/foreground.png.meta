@@ -162,7 +162,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 17
+        width: 16
         height: 192
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -182,10 +182,10 @@ TextureImporter:
       name: foreground_1
       rect:
         serializedVersion: 2
-        x: 116
-        y: 144
-        width: 28
-        height: 34
+        x: 117
+        y: 145
+        width: 26
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -204,10 +204,10 @@ TextureImporter:
       name: foreground_2
       rect:
         serializedVersion: 2
-        x: 191
-        y: 143
-        width: 34
-        height: 34
+        x: 192
+        y: 144
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -226,10 +226,10 @@ TextureImporter:
       name: foreground_3
       rect:
         serializedVersion: 2
-        x: 271
-        y: 127
-        width: 18
-        height: 65
+        x: 272
+        y: 128
+        width: 16
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -248,10 +248,10 @@ TextureImporter:
       name: foreground_4
       rect:
         serializedVersion: 2
-        x: 303
-        y: 175
-        width: 18
-        height: 17
+        x: 304
+        y: 176
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -270,10 +270,10 @@ TextureImporter:
       name: foreground_5
       rect:
         serializedVersion: 2
-        x: 47
-        y: 150
-        width: 18
-        height: 18
+        x: 48
+        y: 151
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -292,10 +292,10 @@ TextureImporter:
       name: foreground_6
       rect:
         serializedVersion: 2
-        x: 303
-        y: 143
-        width: 18
-        height: 18
+        x: 304
+        y: 144
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -314,10 +314,10 @@ TextureImporter:
       name: foreground_7
       rect:
         serializedVersion: 2
-        x: 27
-        y: 79
-        width: 22
-        height: 50
+        x: 28
+        y: 80
+        width: 20
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -336,10 +336,10 @@ TextureImporter:
       name: foreground_8
       rect:
         serializedVersion: 2
-        x: 63
-        y: 95
-        width: 18
-        height: 34
+        x: 64
+        y: 96
+        width: 16
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -358,10 +358,10 @@ TextureImporter:
       name: foreground_9
       rect:
         serializedVersion: 2
-        x: 95
-        y: 95
-        width: 34
-        height: 34
+        x: 96
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -380,10 +380,10 @@ TextureImporter:
       name: foreground_10
       rect:
         serializedVersion: 2
-        x: 143
-        y: 79
-        width: 22
-        height: 50
+        x: 144
+        y: 80
+        width: 20
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -402,10 +402,10 @@ TextureImporter:
       name: foreground_11
       rect:
         serializedVersion: 2
-        x: 191
-        y: 95
-        width: 34
-        height: 34
+        x: 192
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -424,10 +424,10 @@ TextureImporter:
       name: foreground_12
       rect:
         serializedVersion: 2
-        x: 271
-        y: 79
-        width: 34
-        height: 34
+        x: 272
+        y: 80
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -446,10 +446,10 @@ TextureImporter:
       name: foreground_13
       rect:
         serializedVersion: 2
-        x: 63
-        y: 46
-        width: 18
-        height: 34
+        x: 64
+        y: 47
+        width: 16
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -468,10 +468,10 @@ TextureImporter:
       name: foreground_14
       rect:
         serializedVersion: 2
-        x: 95
-        y: 47
-        width: 34
-        height: 34
+        x: 96
+        y: 48
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -490,10 +490,10 @@ TextureImporter:
       name: foreground_15
       rect:
         serializedVersion: 2
-        x: 191
-        y: 31
-        width: 34
-        height: 34
+        x: 192
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -512,10 +512,10 @@ TextureImporter:
       name: foreground_16
       rect:
         serializedVersion: 2
-        x: 239
-        y: 47
-        width: 18
-        height: 18
+        x: 240
+        y: 48
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -534,10 +534,10 @@ TextureImporter:
       name: foreground_17
       rect:
         serializedVersion: 2
-        x: 271
-        y: 31
-        width: 34
-        height: 34
+        x: 272
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -556,10 +556,10 @@ TextureImporter:
       name: foreground_18
       rect:
         serializedVersion: 2
-        x: 319
-        y: 31
-        width: 18
-        height: 34
+        x: 320
+        y: 32
+        width: 16
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -578,10 +578,10 @@ TextureImporter:
       name: foreground_19
       rect:
         serializedVersion: 2
-        x: 239
-        y: 15
-        width: 18
-        height: 18
+        x: 240
+        y: 16
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -600,7 +600,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a690ced1fdb5cc94fbafcd884d2c93ce
     internalID: 0
     vertices: []
     indices: 
