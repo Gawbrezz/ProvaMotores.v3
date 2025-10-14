@@ -8421,6 +8421,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: acorn-1_0
       objectReference: {fileID: 0}
+    - target: {fileID: 8056580210316222041, guid: 7843975cdc031334d875ec762f220c65, type: 3}
+      propertyPath: fase2
+      value: fase3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
