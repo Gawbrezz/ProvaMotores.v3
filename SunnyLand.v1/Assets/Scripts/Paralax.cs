@@ -1,28 +1,29 @@
 using UnityEngine;
 
-public class Parallax : MonoBehaviour
+public class ParallaxLimitado : MonoBehaviour
 {
-    private float length, startpos;
-    public GameObject cam;
-    public float parallaxEffect;
+    public Transform cameraTransform;   // A câmera
+    public float fatorParallax = 0.5f;  // Velocidade da camada
+    public float limiteInicio;          // Posição X onde o movimento começa
+    public float limiteFim;             // Posição X onde o movimento termina
+
+    private Vector3 posInicial;
 
     void Start()
     {
-        startpos = transform.position.x;
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        posInicial = transform.position;
+        if (cameraTransform == null)
+            cameraTransform = Camera.main.transform;
     }
 
     void Update()
     {
-        float temp = (cam.transform.position.x * (1 - parallaxEffect));
-        float dist = (cam.transform.position.x * parallaxEffect);
+        float deslocamentoX = (cameraTransform.position.x - posInicial.x) * fatorParallax;
+        float novaPosX = posInicial.x + deslocamentoX;
 
-        transform.position = new Vector3(startpos + dist, transform.position.y, transform.position.z);
+        // Limita o movimento entre os pontos definidos
+        novaPosX = Mathf.Clamp(novaPosX, limiteInicio, limiteFim);
 
-        // Faz o loop do fundo (caso queira que ele repita)
-        if (temp > startpos + length)
-            startpos += length;
-        else if (temp < startpos - length)
-            startpos -= length;
+        transform.position = new Vector3(novaPosX, transform.position.y, transform.position.z);
     }
 }
