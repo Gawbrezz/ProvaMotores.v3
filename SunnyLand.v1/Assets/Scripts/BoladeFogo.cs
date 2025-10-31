@@ -1,16 +1,36 @@
 using UnityEngine;
 
-public class BoladeFogo : MonoBehaviour
+public class BolaDeFogo : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float velocidade = 8f;
+    public float tempoDeVida = 4f;
+    public Vector2 direcao = Vector2.right; // Definir ao instanciar
+
     void Start()
     {
-        
+        Destroy(gameObject, tempoDeVida);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        transform.Translate(direcao.normalized * velocidade * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            // Usa o método de morte do player, se existir
+            Player player = collision.GetComponent<Player>();
+            if (player != null)
+                player.Morrer();
+
+            Destroy(gameObject);
+        }
+
+        if (collision.CompareTag("Chao"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

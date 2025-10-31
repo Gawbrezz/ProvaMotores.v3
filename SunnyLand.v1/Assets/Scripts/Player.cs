@@ -1,42 +1,45 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    public float velocidade = 40;
-    public float forcaDoPulo = 4;
+    [Header("Movimento")]
+    public float velocidade = 10f;
+    public float forcaDoPulo = 6f;
+
+    [Header("Rolagem")]
     public float forcaRolagem = 6f;
     public float tempoRolagem = 0.5f;
 
     [Header("Pulo Extra (Pena)")]
-    public bool podePularExtra = false; // se o jogador pode usar o pulo extra
-    public float forcaPuloExtra = 20f;   // força configurável no Inspector
+    public bool podePularExtra = false;
+    public float forcaPuloExtra = 8f;
 
     [Header("Wall Slide")]
     public float velocidadeDeslize = -1.5f;
     public LayerMask camadaParede;
     public float distanciaParede = 0.3f;
 
-    private bool noChao = false;
-    private bool andando = false;
-    private bool rolando = false;
-    private bool desequilibrado = false;
-    private bool wallSliding = false;
-    private bool usouPuloExtra = false; // controle interno
-
-    private SpriteRenderer sprite;
-    private Rigidbody2D rb;
-    private Animator animator;
-    private float tempoRolagemAtual = 0f;
-
-    [Header("Desequilíbrio (BoxCast)")]
+    [Header("Desequilíbrio")]
     public Vector2 tamanhoCaixa = new Vector2(0.6f, 0.1f);
     public float distanciaCaixa = 0.1f;
     public LayerMask camadaChao;
 
     [Header("Limbo")]
     public float limiteY = -10f;
+
+    private bool noChao = false;
+    private bool andando = false;
+    private bool rolando = false;
+    private bool desequilibrado = false;
+    private bool wallSliding = false;
+    private bool usouPuloExtra = false;
+
+    private float tempoRolagemAtual = 0f;
+
+    private SpriteRenderer sprite;
+    private Rigidbody2D rb;
+    private Animator animator;
 
     void Start()
     {
@@ -51,43 +54,43 @@ public class Player : MonoBehaviour
         if (rolando)
         {
             tempoRolagemAtual -= Time.deltaTime;
-            if (tempoRolagemAtual <= 0f)
-                rolando = false;
+            if (tempoRolagemAtual <= 0f) rolando = false;
         }
 
         andando = false;
 
         if (!rolando && !desequilibrado && !wallSliding)
         {
-            if (Input.GetKey(KeyCode.A))
+            float moveInput = 0f;
+
+            if (Input.GetKey(KeyCode.A)) moveInput = -1f;
+            if (Input.GetKey(KeyCode.D)) moveInput = 1f;
+
+            rb.linearVelocity = new Vector2(moveInput * velocidade, rb.linearVelocity.y);
+
+            if (moveInput != 0)
             {
-                transform.position += new Vector3(-velocidade * Time.deltaTime, 0, 0);
-                sprite.flipX = true;
                 andando = true;
+                sprite.flipX = moveInput < 0;
             }
 
-            if (Input.GetKey(KeyCode.D))
-            {
-                transform.position += new Vector3(velocidade * Time.deltaTime, 0, 0);
-                sprite.flipX = false;
-                andando = true;
-            }
-
-            // Pulo normal
+            // Pulo
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (noChao)
                 {
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     rb.AddForce(new Vector2(0, forcaDoPulo), ForceMode2D.Impulse);
                 }
                 else if (podePularExtra && !usouPuloExtra)
                 {
                     PularExtra(forcaPuloExtra);
-                    usouPuloExtra = true; // gasta o pulo extra
-                    podePularExtra = false; // desativa a habilidade
+                    usouPuloExtra = true;
+                    podePularExtra = false;
                 }
             }
 
+            // Rolagem
             if (Input.GetKeyDown(KeyCode.LeftShift) && noChao)
             {
                 rolando = true;
@@ -97,10 +100,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        // ----- Checar Desequilíbrio -----
+        // ----- Desequilíbrio e Wall Slide -----
         VerificarDesequilibrio();
-
-        // ----- Checar Wall Slide -----
         VerificarWallSlide();
 
         // ----- Animator -----
@@ -110,9 +111,8 @@ public class Player : MonoBehaviour
         animator.SetBool("Desequilibrado", desequilibrado);
         animator.SetBool("WallSlide", wallSliding);
 
-        // ----- Checar Limbo -----
-        if (transform.position.y < limiteY)
-            Morrer();
+        // ----- Limbo -----
+        if (transform.position.y < limiteY) Morrer();
     }
 
     public void PularExtra(float forcaExtra)
@@ -133,17 +133,14 @@ public class Player : MonoBehaviour
         {
             Vector2 centro = (Vector2)transform.position + Vector2.down * distanciaCaixa;
             RaycastHit2D hit = Physics2D.BoxCast(centro, tamanhoCaixa, 0f, Vector2.down, 0f, camadaChao);
-
             if (hit.collider != null)
             {
-                float centroChao = hit.point.x;
+                float centroChao = hit.collider.bounds.center.x;
                 desequilibrado = Mathf.Abs(transform.position.x - centroChao) > (tamanhoCaixa.x * 0.25f);
             }
-            else
-                desequilibrado = false;
+            else desequilibrado = false;
         }
-        else
-            desequilibrado = false;
+        else desequilibrado = false;
     }
 
     void VerificarWallSlide()
@@ -151,24 +148,19 @@ public class Player : MonoBehaviour
         if (!noChao && rb.linearVelocity.y < 0)
         {
             Vector2 direcao = sprite.flipX ? Vector2.left : Vector2.right;
-            Vector2 origem = transform.position;
-
-            RaycastHit2D hit = Physics2D.Raycast(origem, direcao, distanciaParede, camadaParede);
-
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, direcao, distanciaParede, camadaParede);
             if (hit.collider != null)
             {
                 wallSliding = true;
                 if (rb.linearVelocity.y < velocidadeDeslize)
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, velocidadeDeslize);
             }
-            else
-                wallSliding = false;
+            else wallSliding = false;
         }
-        else
-            wallSliding = false;
+        else wallSliding = false;
     }
 
-    void Morrer()
+    public void Morrer()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -178,7 +170,7 @@ public class Player : MonoBehaviour
         if (colisao.gameObject.CompareTag("Chao"))
         {
             noChao = true;
-            usouPuloExtra = false; // reseta ao tocar o chão
+            usouPuloExtra = false;
         }
     }
 
