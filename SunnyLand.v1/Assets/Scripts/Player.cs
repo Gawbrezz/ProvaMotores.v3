@@ -162,8 +162,13 @@ public class Player : MonoBehaviour
 
     public void Morrer()
     {
+        // ✅ Conta uma morte
+        FindObjectOfType<DeathCounter>()?.AddDeath();
+
+        // ✅ Recarrega a cena após contar a morte
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
 
     void OnCollisionEnter2D(Collision2D colisao)
     {

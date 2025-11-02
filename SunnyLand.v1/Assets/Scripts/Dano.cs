@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Dano : MonoBehaviour
 {
@@ -8,7 +6,12 @@ public class Dano : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);          
+            Player player = other.gameObject.GetComponent<Player>();
+
+            if (player != null)
+            {
+                player.Morrer(); // chama o método do player que conta a morte + reseta cena
+            }
         }
     }
 }
