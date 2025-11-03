@@ -1,36 +1,32 @@
 using UnityEngine;
 
-public class BolaDeFogo : MonoBehaviour
+public class Fireball : MonoBehaviour
 {
-    public float velocidade = 8f;
-    public float tempoDeVida = 4f;
-    public Vector2 direcao = Vector2.right; // Definir ao instanciar
+    public float velocidade = 6f;
+    private Vector2 direcao;
 
-    void Start()
+    public void SetDirection(Vector2 d)
     {
-        Destroy(gameObject, tempoDeVida);
+        direcao = d;
     }
 
     void Update()
     {
-        transform.Translate(direcao.normalized * velocidade * Time.deltaTime);
+        transform.Translate(direcao * velocidade * Time.deltaTime);
+
+        // opcional: vira a sprite na direção que vai
+        if (direcao.x < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if (collision.CompareTag("Player"))
+        if (col.CompareTag("Player"))
         {
-            // Usa o método de morte do player, se existir
-            Player player = collision.GetComponent<Player>();
-            if (player != null)
-                player.Morrer();
-
-            Destroy(gameObject);
+            Player p = col.GetComponent<Player>();
+            if (p != null) p.Morrer();
         }
 
-        if (collision.CompareTag("Chao"))
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }

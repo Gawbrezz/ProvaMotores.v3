@@ -62,9 +62,19 @@ public class BossDragon : MonoBehaviour
     void Fireball()
     {
         anim.SetTrigger("Fireball");
-        Instantiate(fireballPrefab, firePoint.position, firePoint.rotation);
+
+        // cria a bola
+        GameObject bola = Instantiate(fireballPrefab, firePoint.position, Quaternion.identity);
+
+        // calcula direção até o player
+        Vector2 direcao = (player.position - firePoint.position).normalized;
+
+        // envia a direção para o script da bala
+        bola.GetComponent<Fireball>().SetDirection(direcao);
+
         proximoFireball = Time.time + fireballCooldown;
     }
+
 
     void Rajada()
     {
