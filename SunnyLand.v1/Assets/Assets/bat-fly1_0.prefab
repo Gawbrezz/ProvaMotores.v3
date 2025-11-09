@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 6835781388486050529}
   m_Layer: 0
   m_Name: bat-fly1_0
-  m_TagString: Untagged
+  m_TagString: Perigo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1780775d269c68341a319ad94f795a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tempoAnimacaoMorte: 0.8
 --- !u!50 &5672444490329083286
 Rigidbody2D:
   serializedVersion: 5
@@ -297,7 +298,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

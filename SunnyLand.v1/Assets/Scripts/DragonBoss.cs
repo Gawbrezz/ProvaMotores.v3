@@ -39,19 +39,19 @@ public class BossDragon : MonoBehaviour
     {
         float distancia = Vector2.Distance(transform.position, player.position);
 
-        // ========== ATAQUE RAJADA (perto) ==========
+        // ========== ATAQUE RAJADA (perto) ========== 
         if (distancia <= distanciaRajada && Time.time >= proximoBreath)
         {
             Rajada();
         }
 
-        // ========== ATAQUE FIREBALL (longe) ==========
+        // ========== ATAQUE FIREBALL (longe) ========== 
         else if (Time.time >= proximoFireball)
         {
             Fireball();
         }
 
-        // ========== PULO ==========
+        // ========== PULO ========== 
         if (Time.time >= proximoPulo)
         {
             Pular();
@@ -74,7 +74,6 @@ public class BossDragon : MonoBehaviour
 
         proximoFireball = Time.time + fireballCooldown;
     }
-
 
     void Rajada()
     {
