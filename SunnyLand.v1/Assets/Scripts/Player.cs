@@ -3,36 +3,20 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    [Header("Movimento")]
-    public float velocidade = 10f;
+    [Header("Movimento")] public float velocidade = 10f;
     public float forcaDoPulo = 6f;
 
-    [Header("Rolagem")]
-    public float forcaRolagem = 6f;
+    [Header("Rolagem")] public float forcaRolagem = 6f;
     public float tempoRolagem = 0.5f;
 
-    [Header("Pulo Extra (Pena)")]
-    public bool podePularExtra = false;
+    [Header("Pulo Extra (Pena)")] public bool podePularExtra = false;
     public float forcaPuloExtra = 8f;
 
-    [Header("Wall Slide")]
-    public float velocidadeDeslize = -1.5f;
-    public LayerMask camadaParede;
-    public float distanciaParede = 0.3f;
-
-    [Header("Desequilíbrio")]
-    public Vector2 tamanhoCaixa = new Vector2(0.6f, 0.1f);
-    public float distanciaCaixa = 0.1f;
-    public LayerMask camadaChao;
-
-    [Header("Limbo")]
-    public float limiteY = -10f;
+    [Header("Limbo")] public float limiteY = -10f;
 
     private bool noChao = false;
     private bool andando = false;
     private bool rolando = false;
-    private bool desequilibrado = false;
-    private bool wallSliding = false;
     private bool usouPuloExtra = false;
 
     private float tempoRolagemAtual = 0f;
@@ -59,7 +43,7 @@ public class Player : MonoBehaviour
 
         andando = false;
 
-        if (!rolando && !desequilibrado && !wallSliding)
+        if (!rolando)
         {
             float moveInput = 0f;
 
@@ -100,16 +84,10 @@ public class Player : MonoBehaviour
             }
         }
 
-        // ----- Desequilíbrio e Wall Slide -----
-        VerificarDesequilibrio();
-        VerificarWallSlide();
-
         // ----- Animator -----
         animator.SetBool("Andando", andando);
         animator.SetBool("Pulo", !noChao);
         animator.SetBool("Rolando", rolando);
-        animator.SetBool("Desequilibrado", desequilibrado);
-        animator.SetBool("WallSlide", wallSliding);
 
         // ----- Limbo -----
         if (transform.position.y < limiteY) Morrer();
@@ -125,39 +103,6 @@ public class Player : MonoBehaviour
     {
         podePularExtra = true;
         usouPuloExtra = false;
-    }
-
-    void VerificarDesequilibrio()
-    {
-        if (noChao)
-        {
-            Vector2 centro = (Vector2)transform.position + Vector2.down * distanciaCaixa;
-            RaycastHit2D hit = Physics2D.BoxCast(centro, tamanhoCaixa, 0f, Vector2.down, 0f, camadaChao);
-            if (hit.collider != null)
-            {
-                float centroChao = hit.collider.bounds.center.x;
-                desequilibrado = Mathf.Abs(transform.position.x - centroChao) > (tamanhoCaixa.x * 0.25f);
-            }
-            else desequilibrado = false;
-        }
-        else desequilibrado = false;
-    }
-
-    void VerificarWallSlide()
-    {
-        if (!noChao && rb.linearVelocity.y < 0)
-        {
-            Vector2 direcao = sprite.flipX ? Vector2.left : Vector2.right;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direcao, distanciaParede, camadaParede);
-            if (hit.collider != null)
-            {
-                wallSliding = true;
-                if (rb.linearVelocity.y < velocidadeDeslize)
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, velocidadeDeslize);
-            }
-            else wallSliding = false;
-        }
-        else wallSliding = false;
     }
 
     public void Morrer()
@@ -183,16 +128,5 @@ public class Player : MonoBehaviour
     {
         if (colisao.gameObject.CompareTag("Chao"))
             noChao = false;
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Vector2 centro = (Vector2)transform.position + Vector2.down * distanciaCaixa;
-        Gizmos.DrawWireCube(centro, tamanhoCaixa);
-
-        Gizmos.color = Color.blue;
-        Vector2 direcao = sprite != null && sprite.flipX ? Vector2.left : Vector2.right;
-        Gizmos.DrawLine(transform.position, (Vector2)transform.position + direcao * distanciaParede);
     }
 }
