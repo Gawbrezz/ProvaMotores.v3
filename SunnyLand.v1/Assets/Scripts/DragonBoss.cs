@@ -1,92 +1,99 @@
 using UnityEngine;
 
-public class BossDragon : MonoBehaviour
+public class DragonBossVoador : MonoBehaviour
 {
-    [Header("Configurações Gerais")]
+    [Header("Movimentação Aérea")]
+    public Transform pontoA;
+    public Transform pontoB;
+    public float velocidade = 4f;
+
+    [Header("Perseguição")]
     public Transform player;
-    public float distanciaRajada = 3f;
-    public float fireballCooldown = 2f;
-    public float breathCooldown = 3f;
+    public float distanciaParaSeguir = 90f;
 
-    [Header("Prefabs de Ataques")]
-    public GameObject fireballPrefab;
-    public Transform firePoint;
-    public GameObject breathPrefab;
+    [Header("Ataque")]
+    public GameObject bolaDeFogoPrefab;
+    public float tempoEntreTiros = 3f;
+    public float forcaTiro = 8f;
 
-    [Header("Pulo")]
-    public float jumpForce = 8f;
-    public float jumpIntervalMin = 3f;
-    public float jumpIntervalMax = 6f;
+    private float timerTiro = 0f;
+    private Vector3 destino;
 
-    private Rigidbody2D rb;
-    private Animator anim;
-
-    private float proximoFireball;
-    private float proximoBreath;
-    private float proximoPulo;
-
-    private bool podeVoar = false; // futuro upgrade
+    private SpriteRenderer sr;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-
-        proximoPulo = Time.time + Random.Range(jumpIntervalMin, jumpIntervalMax);
+        destino = pontoB.position;
+        sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        float distancia = Vector2.Distance(transform.position, player.position);
-
-        // ========== ATAQUE RAJADA (perto) ========== 
-        if (distancia <= distanciaRajada && Time.time >= proximoBreath)
-        {
-            Rajada();
-        }
-
-        // ========== ATAQUE FIREBALL (longe) ========== 
-        else if (Time.time >= proximoFireball)
-        {
-            Fireball();
-        }
-
-        // ========== PULO ========== 
-        if (Time.time >= proximoPulo)
-        {
-            Pular();
-            proximoPulo = Time.time + Random.Range(jumpIntervalMin, jumpIntervalMax);
-        }
+        Mover();
+        Atirar();
     }
 
-    void Fireball()
+    // -------------------------------
+    //  MOVIMENTO AÉREO REAL
+    // -------------------------------
+    void Mover()
     {
-        anim.SetTrigger("Fireball");
+        float distanciaDoPlayer = Vector2.Distance(transform.position, player.position);
 
-        // cria a bola
-        GameObject bola = Instantiate(fireballPrefab, firePoint.position, Quaternion.identity);
+        // Seguir player SE estiver perto
+        if (distanciaDoPlayer <= distanciaParaSeguir)
+        {
+            destino = player.position;
+        }
+        else
+        {
+            // Patrulha entre A e B
+            if (Vector2.Distance(transform.position, destino) < 0.3f)
+            {
+                destino = (destino == pontoA.position) ? pontoB.position : pontoA.position;
+            }
+        }
 
-        // calcula direção até o player
-        Vector2 direcao = (player.position - firePoint.position).normalized;
+        // Move voando
+        transform.position = Vector2.MoveTowards(
+            transform.position,
+            destino,
+            velocidade * Time.deltaTime
+        );
 
-        // envia a direção para o script da bala
-        bola.GetComponent<Fireball>().SetDirection(direcao);
-
-        proximoFireball = Time.time + fireballCooldown;
+        // Virar sprite
+        sr.flipX = destino.x < transform.position.x;
     }
 
-    void Rajada()
+    // -------------------------------
+    //  ATAQUE — TIRO TRIPLO REAL
+    // -------------------------------
+    void Atirar()
     {
-        anim.SetTrigger("Breath");
-        GameObject fumaça = Instantiate(breathPrefab, firePoint.position, firePoint.rotation);
-        Destroy(fumaça, 1.5f);
-        proximoBreath = Time.time + breathCooldown;
+        timerTiro -= Time.deltaTime;
+
+        if (timerTiro > 0) return;
+        timerTiro = tempoEntreTiros;
+
+        // Direção do tiro
+        float direcao = sr.flipX ? -1 : 1;
+        Vector2 dir = new Vector2(direcao, 0);
+
+        // Posições laterais para o tiro triplo
+        Vector3 cima = new Vector3(0, 0.3f, 0);
+        Vector3 meio = Vector3.zero;
+        Vector3 baixo = new Vector3(0, -0.3f, 0);
+
+        Disparar(dir, transform.position + cima);
+        Disparar(dir, transform.position + meio);
+        Disparar(dir, transform.position + baixo);
     }
 
-    void Pular()
+    void Disparar(Vector2 direcao, Vector3 pos)
     {
-        if (podeVoar) return; // caso no futuro ele passe a voar
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        anim.SetTrigger("Jump");
+        GameObject bola = Instantiate(bolaDeFogoPrefab, pos, Quaternion.identity);
+        Rigidbody2D rb = bola.GetComponent<Rigidbody2D>();
+
+        rb.linearVelocity = direcao * forcaTiro;
     }
 }
