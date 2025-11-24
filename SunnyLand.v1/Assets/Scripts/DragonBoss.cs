@@ -2,98 +2,81 @@ using UnityEngine;
 
 public class DragonBossVoador : MonoBehaviour
 {
-    [Header("Movimentação Aérea")]
-    public Transform pontoA;
-    public Transform pontoB;
-    public float velocidade = 4f;
+    [Header("Movimentação")]
+    public Transform[] pontosPatrulha;
+    private int indexAtual = 0;
+    public float velocidade = 3f;
+    public float distanciaPlayerParaPerseguir = 8f;
 
-    [Header("Perseguição")]
+    [Header("Tiro")]
+    public GameObject fireballPrefab;
+    public float intervaloTiro = 2f;
+    private float tempoTiro = 0f;
+
+    [Header("Referências")]
     public Transform player;
-    public float distanciaParaSeguir = 90f;
-
-    [Header("Ataque")]
-    public GameObject bolaDeFogoPrefab;
-    public float tempoEntreTiros = 3f;
-    public float forcaTiro = 8f;
-
-    private float timerTiro = 0f;
-    private Vector3 destino;
-
-    private SpriteRenderer sr;
-
-    void Start()
-    {
-        destino = pontoB.position;
-        sr = GetComponent<SpriteRenderer>();
-    }
+    public Transform pontoTiroCentro;
+    public Transform pontoTiroEsquerda;
+    public Transform pontoTiroDireita;
 
     void Update()
     {
-        Mover();
-        Atirar();
-    }
+        if (player == null) return;
 
-    // -------------------------------
-    //  MOVIMENTO AÉREO REAL
-    // -------------------------------
-    void Mover()
-    {
-        float distanciaDoPlayer = Vector2.Distance(transform.position, player.position);
-
-        // Seguir player SE estiver perto
-        if (distanciaDoPlayer <= distanciaParaSeguir)
-        {
-            destino = player.position;
-        }
+        // ---- FLIP CORRIGIDO ----
+        if (player.position.x > transform.position.x)
+            transform.localScale = new Vector3(1, 1, 1);   // olhando pra direita
         else
+            transform.localScale = new Vector3(-1, 1, 1);  // olhando pra esquerda
+
+        float distancia = Vector2.Distance(transform.position, player.position);
+
+        // Se o player estiver perto → seguir ele
+        if (distancia <= distanciaPlayerParaPerseguir)
+            SeguirPlayer();
+        else
+            Patrulhar();
+
+        // Atirar
+        tempoTiro += Time.deltaTime;
+        if (tempoTiro >= intervaloTiro)
         {
-            // Patrulha entre A e B
-            if (Vector2.Distance(transform.position, destino) < 0.3f)
-            {
-                destino = (destino == pontoA.position) ? pontoB.position : pontoA.position;
-            }
+            AtirarTres();
+            tempoTiro = 0f;
         }
-
-        // Move voando
-        transform.position = Vector2.MoveTowards(
-            transform.position,
-            destino,
-            velocidade * Time.deltaTime
-        );
-
-        // Virar sprite
-        sr.flipX = destino.x < transform.position.x;
     }
 
-    // -------------------------------
-    //  ATAQUE — TIRO TRIPLO REAL
-    // -------------------------------
-    void Atirar()
+    void Patrulhar()
     {
-        timerTiro -= Time.deltaTime;
+        if (pontosPatrulha.Length == 0) return;
 
-        if (timerTiro > 0) return;
-        timerTiro = tempoEntreTiros;
+        Transform alvo = pontosPatrulha[indexAtual];
+        transform.position = Vector2.MoveTowards(transform.position, alvo.position, velocidade * Time.deltaTime);
 
-        // Direção do tiro
-        float direcao = sr.flipX ? -1 : 1;
-        Vector2 dir = new Vector2(direcao, 0);
-
-        // Posições laterais para o tiro triplo
-        Vector3 cima = new Vector3(0, 0.3f, 0);
-        Vector3 meio = Vector3.zero;
-        Vector3 baixo = new Vector3(0, -0.3f, 0);
-
-        Disparar(dir, transform.position + cima);
-        Disparar(dir, transform.position + meio);
-        Disparar(dir, transform.position + baixo);
+        if (Vector2.Distance(transform.position, alvo.position) < 0.3f)
+            indexAtual = (indexAtual + 1) % pontosPatrulha.Length;
     }
 
-    void Disparar(Vector2 direcao, Vector3 pos)
+    void SeguirPlayer()
     {
-        GameObject bola = Instantiate(bolaDeFogoPrefab, pos, Quaternion.identity);
-        Rigidbody2D rb = bola.GetComponent<Rigidbody2D>();
+        transform.position = Vector2.MoveTowards(transform.position, player.position, velocidade * Time.deltaTime);
+    }
 
-        rb.linearVelocity = direcao * forcaTiro;
+    void AtirarTres()
+    {
+        // Direção correta baseada no flip
+        int direcao = transform.localScale.x > 0 ? 1 : -1;
+
+        AtirarUma(pontoTiroCentro, direcao);
+        AtirarUma(pontoTiroEsquerda, direcao);
+        AtirarUma(pontoTiroDireita, direcao);
+    }
+
+    void AtirarUma(Transform ponto, int direcao)
+    {
+        GameObject fireball = Instantiate(fireballPrefab, ponto.position, Quaternion.identity);
+
+        // Faz a bola de fogo ir sempre pra frente do dragão
+        fireball.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(direcao * 5f, 0);
     }
 }

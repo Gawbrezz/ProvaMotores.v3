@@ -1,72 +1,103 @@
 using UnityEngine;
 
-public class DragaoChefao : MonoBehaviour
+public class Dragon : MonoBehaviour
 {
     [Header("Movimento")]
-    public float velocidade = 2f;
-    public float alturaVooMin = 2f;
-    public float alturaVooMax = 5f;
+    public float velocidade = 3f;
+    public float alturaPulo = 4f;
+    public float tempoEntrePulos = 2f;
 
     [Header("Ataque")]
-    public GameObject bolaDeFogoPrefab;
-    public float tempoEntreTiros = 2f;
-    public float forcaTiro = 7f;
+    public GameObject fireballPrefab;
+    public Transform firePoint;
+    public float tempoEntreTiros = 3f;
 
-    private float tempoTiroAtual = 0f;
-    private Transform player;
+    [Header("Breath")]
+    public GameObject breathPrefab;
+    public float tempoEntreBreaths = 6f;
+
+    private Rigidbody2D rb;
     private SpriteRenderer sprite;
+    private Animator animator;
+
+    private float contadorPulo;
+    private float contadorTiro;
+    private float contadorBreath;
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
+        contadorPulo = tempoEntrePulos;
+        contadorTiro = tempoEntreTiros;
+        contadorBreath = tempoEntreBreaths;
     }
 
     private void Update()
     {
-        if (player == null) return;
+        // --- Movimento simples ---
+        rb.linearVelocity = new Vector2(velocidade, rb.linearVelocity.y);
 
-        // -------- Movimento --------
-        float direcao = player.position.x > transform.position.x ? 1 : -1;
-        sprite.flipX = direcao < 0;
+        // Inverte direção ao bater em algo
+        sprite.flipX = velocidade < 0;
 
-        transform.position = new Vector3(
-            transform.position.x,
-            Mathf.Lerp(transform.position.y, alturaVooMax, Time.deltaTime * velocidade),
-            transform.position.z
-        );
-
-        // -------- Ataque --------
-        tempoTiroAtual -= Time.deltaTime;
-        if (tempoTiroAtual <= 0)
+        // --- PULO ---
+        contadorPulo -= Time.deltaTime;
+        if (contadorPulo <= 0)
         {
-            Atirar3();
-            tempoTiroAtual = tempoEntreTiros;
+            rb.AddForce(Vector2.up * alturaPulo, ForceMode2D.Impulse);
+            contadorPulo = tempoEntrePulos;
+        }
+
+        // --- TIRO (1 bola de fogo) ---
+        contadorTiro -= Time.deltaTime;
+        if (contadorTiro <= 0)
+        {
+            Atirar();
+            contadorTiro = tempoEntreTiros;
+        }
+
+        // --- BREATH ---
+        contadorBreath -= Time.deltaTime;
+        if (contadorBreath <= 0)
+        {
+            SoltarBreath();
+            contadorBreath = tempoEntreBreaths;
         }
     }
 
-    private void Atirar3()
+    private void Atirar()
     {
-        if (bolaDeFogoPrefab == null) return;
+        if (fireballPrefab == null || firePoint == null) return;
+
+        GameObject bola = Instantiate(fireballPrefab, firePoint.position, Quaternion.identity);
 
         float direcao = sprite.flipX ? -1 : 1;
 
-        CriarTiro(0, direcao);      // tiro do meio
-        CriarTiro(0.3f, direcao);   // tiro acima
-        CriarTiro(-0.3f, direcao);  // tiro abaixo
+        Rigidbody2D rbBola = bola.GetComponent<Rigidbody2D>();
+        rbBola.linearVelocity = new Vector2(6f * direcao, 0);
     }
 
-    private void CriarTiro(float offsetY, float direcao)
+    private void SoltarBreath()
     {
-        Vector3 pos = transform.position + new Vector3(direcao * 1f, offsetY, 0);
+        if (breathPrefab == null) return;
 
-        GameObject tiro = Instantiate(bolaDeFogoPrefab, pos, Quaternion.identity);
+        Vector3 pos = transform.position + new Vector3(sprite.flipX ? -1.2f : 1.2f, 0, 0);
+        GameObject b = Instantiate(breathPrefab, pos, Quaternion.identity);
 
-        Rigidbody2D rb = tiro.GetComponent<Rigidbody2D>();
+        // vira o breath junto do dragão
+        if (sprite.flipX)
+            b.transform.localScale = new Vector3(-1, 1, 1);
+    }
 
-        if (rb != null)
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        // Inverte direção ao tocar parede ou borda
+        if (col.collider.CompareTag("Chao") == false)
         {
-            rb.linearVelocity = new Vector2(forcaTiro * direcao, 0);
+            velocidade *= -1;
         }
     }
 }
