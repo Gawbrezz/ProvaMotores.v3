@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6277242492664604132}
   - component: {fileID: 1286545405987598092}
   - component: {fileID: 5267149269685636440}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fireball left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,8 +126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocidade: 8
-  tempoDeVida: 4
-  direcao: {x: 1, y: 0}
 --- !u!50 &1286545405987598092
 Rigidbody2D:
   serializedVersion: 5
