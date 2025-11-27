@@ -9534,11 +9534,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1757536723449206435, guid: 45b317fd1a922fd4fa3f292e25f4286d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.35
+      value: -7.42
       objectReference: {fileID: 0}
     - target: {fileID: 1757536723449206435, guid: 45b317fd1a922fd4fa3f292e25f4286d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.16
+      value: 2.18
       objectReference: {fileID: 0}
     - target: {fileID: 1757536723449206435, guid: 45b317fd1a922fd4fa3f292e25f4286d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12817,7 +12817,7 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: -5, y: 0, z: 0}
+  - first: {x: -8, y: 0, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 3
