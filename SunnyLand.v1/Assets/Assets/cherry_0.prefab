@@ -125,7 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacc1400791a6e847bb73cc996b5c83f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textoDeVitoria: {fileID: 0}
+  Colect: {fileID: 0}
+  playerTag: Player
 --- !u!50 &2955021967412902796
 Rigidbody2D:
   serializedVersion: 5
@@ -183,7 +184,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
